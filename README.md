@@ -5,8 +5,10 @@ service Edge itself uses — over its WebSocket. No key, no account, nothing
 installed. Streams MP3 as it is synthesised, with a timing for every word.
 
 A TypeScript port of the Python [`edge-tts`](https://github.com/rany2/edge-tts)
-package (7.x), extracted from **prifly**'s desktop host, where it reads answers
-aloud in en-GB-RyanNeural at +20 %.
+package (7.x) by rany2 and contributors — the token, the escaping and chunking,
+the SSML and the messages all follow it, and it is licensed the same way
+(LGPL v3, see [License](#license)). Extracted from **prifly**'s desktop host,
+where it reads answers aloud in en-GB-RyanNeural at +20 %.
 
 **Bun only.** It uses `Bun.CryptoHasher` for the token and
 `new WebSocket(url, { headers })`, which neither the browser's nor Node's
@@ -101,27 +103,33 @@ in upstream Python `edge-tts`:
    value only if upstream changed the algorithm), tag a new version, bump the
    consumers.
 
-## Access
+## Installing
 
-Private. Consumers depend on a pinned tag over SSH (Bun resolves a private
-`git+https` dependency through the GitHub API, which 404s without a token):
+Not on npm. Depend on a pinned tag from GitHub:
 
 ```json
-"@jimmy927/edge-tts": "git+ssh://git@github.com/jimmy927/edge-tts.git#v0.1.0"
+"@jimmy927/edge-tts": "git+https://github.com/jimmy927/edge-tts.git#v0.1.1"
 ```
 
-Changes are made **here**, tagged, and each consumer bumps. No copies. Each
-installer (CI, image builds, servers) gets its own read-only deploy key.
+(`github:jimmy927/edge-tts#v0.1.1` works too.) Changes are made **here**,
+tagged, and each consumer bumps.
 
 ## Consumers
 
 - **prifly** — the desktop host's read-aloud (`/speech`). Not switched yet:
   it still has its own copy in `apps/desktop-host/src/speech/`, which this
   package was extracted from.
-- **threadhawk** — planned.
+- **threadhawk** — the Review page's read-aloud.
 
 ## Checks
 
 ```sh
 bun test && bunx biome check . && bunx tsc --noEmit
 ```
+
+## License
+
+LGPL v3 (`LGPL-3.0-only`), the license of the upstream Python
+[`edge-tts`](https://github.com/rany2/edge-tts) this is ported from. See
+`LICENSE` (the LGPL, with the credit to upstream) and `COPYING` (the GPL v3 it
+builds on).

@@ -1,6 +1,12 @@
 {
   "name": "@jimmy927/edge-tts",
-  "version": "0.1.0",
+  "version": "0.1.1",
+  "description": "Edge Read aloud neural text to speech over its WebSocket, for Bun. A TypeScript port of rany2/edge-tts.",
+  "license": "LGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimmy927/edge-tts.git"
+  },
   "private": true,
   "type": "module",
   "main": "./src/index.ts",
