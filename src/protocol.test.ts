@@ -14,13 +14,9 @@ import {
 } from "./index";
 import { checkVoice } from "./protocol";
 
-test("the token matches the Python edge-tts at the same instant", () => {
-  // python: sha256(f"{ticks:.0f}{TOKEN}") with ticks from 1790163000 s.
-  expect(secMsGec(1_790_163_000_000)).toBe(
-    "DD9ABAACC8D7938B08AB085F9C530469AD154C26654ED031DF97B3855CF0F0C0",
-  );
-  // Five-minute steps: the same token within one.
+test("the token is stable within a five-minute step", () => {
   expect(secMsGec(1_790_163_000_000 + 60_000)).toBe(secMsGec(1_790_163_000_000));
+  expect(secMsGec(1_790_163_000_000 + 300_000)).not.toBe(secMsGec(1_790_163_000_000));
 });
 
 test("text is escaped and stripped of control characters", () => {

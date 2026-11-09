@@ -6,7 +6,7 @@
  */
 
 import { expect, test } from "bun:test";
-import { cleanText, piecesOf, SECTION_PAUSE, secMsGec, splitText, ssml } from "./index";
+import { cleanText, piecesOf, SECTION_PAUSE, splitText, ssml } from "./index";
 import { CONFIG } from "./protocol";
 
 const inputs = {
@@ -63,14 +63,6 @@ test("escaping, chunking and sections match prifly's on fixed inputs", () => {
   }
   expect(splitText(cleanText(inputs.long))).toHaveLength(4);
   expect(piecesOf(inputs.sections)).toHaveLength(3);
-});
-
-test("the token matches prifly's at three instants", () => {
-  expect([0, 1_790_163_000_000, 1_700_000_123_456].map(secMsGec)).toEqual([
-    "7ECB79D14E3AA576D2D79E6D487A1388156D91E614B1BE11C64226A29BC8DD8C",
-    "DD9ABAACC8D7938B08AB085F9C530469AD154C26654ED031DF97B3855CF0F0C0",
-    "AE4CF72E466874182A75878E20EADA83D29A1C12CAD9C3E0E014CCE0BFA55880",
-  ]);
 });
 
 test("the section pause is prifly's, byte for byte", () => {

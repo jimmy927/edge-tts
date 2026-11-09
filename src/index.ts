@@ -18,6 +18,7 @@ export {
   TRUSTED_CLIENT_TOKEN,
   WSS_URL,
 } from "./constants";
+export { secMsGec } from "./drm";
 export { type LogFields, type Logger, silentLogger } from "./log";
 export {
   audioOf,
@@ -27,7 +28,6 @@ export {
   localeOf,
   openLink,
   type SpokenWord,
-  secMsGec,
   splitText,
   ssml,
   type Voice,

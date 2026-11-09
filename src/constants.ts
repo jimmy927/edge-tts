@@ -3,7 +3,7 @@
  *
  * The service is Edge's own "Read aloud", so it checks that the caller looks
  * like Edge: the Sec-MS-GEC token (a hash of the time and Edge's public client
- * token, see `secMsGec` in `protocol.ts`) and an Edge version it accepts. When
+ * token, see `secMsGec` in `drm.ts`) and an Edge version it accepts. When
  * Microsoft moves either, the Python `edge-tts` project releases a new constant
  * — https://github.com/rany2/edge-tts, `src/edge_tts/constants.py` and
  * `drm.py` — and the values here follow it. Nothing else in this package
@@ -20,7 +20,7 @@ export const CHROMIUM_VERSION = "143.0.3650.75";
 export const CHROMIUM_MAJOR = CHROMIUM_VERSION.split(".")[0] ?? "";
 
 /** Sent next to the token as `Sec-MS-GEC-Version`. Upstream: `SEC_MS_GEC_VERSION`. */
-export const SEC_MS_GEC_VERSION = `1-${CHROMIUM_VERSION}`;
+export const SEC_MS_GEC_VERSION = `2-${CHROMIUM_VERSION}`;
 
 /** The Read aloud extension's origin, which the service expects. */
 export const ORIGIN = "chrome-extension://jdiccldimpdaibmpdkjnbmckianbfold";

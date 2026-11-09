@@ -1,13 +1,13 @@
 /**
- * The wire: the Sec-MS-GEC token, the text as the service takes it, the SSML
+ * The wire: the text as the service takes it, the SSML
  * around it, the frames that come back, and opening one configured connection.
  *
  * A port of the Python `edge-tts` package (7.x): the same token, the same
  * headers and the same streaming, so audio starts as soon as the first chunk
  * is synthesised rather than once the whole text has been.
  *
- * Bun only: `Bun.CryptoHasher`, and `new WebSocket(url, { headers })`, which
- * the browser and Node's WebSocket do not take.
+ * Bun only: `new WebSocket(url, { headers })`, which the browser and Node's
+ * WebSocket do not take.
  */
 
 import {
@@ -17,25 +17,12 @@ import {
   ORIGIN,
   OUTPUT_FORMAT,
   SEC_MS_GEC_VERSION,
-  TRUSTED_CLIENT_TOKEN,
   WSS_URL,
 } from "./constants";
+import { secMsGec } from "./drm";
 
-/** Seconds from the Windows file-time epoch (1601) to the Unix one. */
-const WIN_EPOCH = 11_644_473_600;
 /** The service takes at most this much text per request; longer text is sent in turns. */
 export const CHUNK_BYTES = 4096;
-
-/** The Sec-MS-GEC token: SHA-256 of the time, in 5-minute steps of Windows file time, and the client token. */
-export function secMsGec(nowMs: number): string {
-  let seconds = Math.floor(nowMs / 1000) + WIN_EPOCH;
-  seconds -= seconds % 300;
-  const ticks = BigInt(seconds) * 10_000_000n;
-  return new Bun.CryptoHasher("sha256")
-    .update(`${ticks}${TRUSTED_CLIENT_TOKEN}`)
-    .digest("hex")
-    .toUpperCase();
-}
 
 export const id = () => crypto.randomUUID().replaceAll("-", "");
 

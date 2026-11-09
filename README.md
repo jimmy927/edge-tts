@@ -10,8 +10,7 @@ the SSML and the messages all follow it, and it is licensed the same way
 (LGPL v3, see [License](#license)). Extracted from **prifly**'s desktop host,
 where it reads answers aloud in en-GB-RyanNeural at +20 %.
 
-**Bun only.** It uses `Bun.CryptoHasher` for the token and
-`new WebSocket(url, { headers })`, which neither the browser's nor Node's
+**Bun only.** It uses `new WebSocket(url, { headers })`, which neither the browser's nor Node's
 WebSocket accepts — and the service refuses a connection without Edge's
 Origin and User-Agent.
 
@@ -20,7 +19,8 @@ Origin and User-Agent.
 | file | |
 |---|---|
 | `constants.ts` | everything that rotates (client token, Edge version) and the fixed audio format |
-| `protocol.ts` | the Sec-MS-GEC token, escaping, 4 KB chunking, SSML, audio and word-boundary frames, opening one connection |
+| `drm.ts` | the Sec-MS-GEC v2 token (a port of upstream's `drm.py`) |
+| `protocol.ts` | escaping, 4 KB chunking, SSML, audio and word-boundary frames, opening one connection |
 | `speech-link.ts` | `SpeechLinks`: warm connections, owned and closed by the consumer |
 | `synthesize.ts` | a whole text as one MP3 `ReadableStream`, sections apart by silence |
 
@@ -99,8 +99,8 @@ in upstream Python `edge-tts`:
    `src/edge_tts/constants.py` (`CHROMIUM_FULL_VERSION`,
    `TRUSTED_CLIENT_TOKEN`) and `drm.py` (how Sec-MS-GEC is computed).
 2. Copy the new values into `src/constants.ts` — the only place they live.
-3. `bun test` (the token test pins today's algorithm; update its expected
-   value only if upstream changed the algorithm), tag a new version, bump the
+3. `bun test` (`drm.test.ts` pins the token to vectors from upstream's own Python;
+   regenerate them only if upstream changed the algorithm), tag a new version, bump the
    consumers.
 
 ## Installing
@@ -108,10 +108,10 @@ in upstream Python `edge-tts`:
 Not on npm. Depend on a pinned tag from GitHub:
 
 ```json
-"@jimmy927/edge-tts": "git+https://github.com/jimmy927/edge-tts.git#v0.1.1"
+"@jimmy927/edge-tts": "git+https://github.com/jimmy927/edge-tts.git#v0.1.2"
 ```
 
-(`github:jimmy927/edge-tts#v0.1.1` works too.) Changes are made **here**,
+(`github:jimmy927/edge-tts#v0.1.2` works too.) Changes are made **here**,
 tagged, and each consumer bumps.
 
 ## Consumers
@@ -126,6 +126,15 @@ tagged, and each consumer bumps.
 ```sh
 bun test && bunx biome check . && bunx tsc --noEmit
 ```
+
+## Changelog
+
+- **0.1.2** — follows upstream's Sec-MS-GEC v2
+  (rany2/edge-tts `bd44c1d1aaebdc1db7f47456ee12431b42ec7cac`, token change
+  `ba61d94442`): the new `<CS64>-<SHA256>` token and `Sec-MS-GEC-Version: 2-…`.
+  Microsoft answers the old v1 token with HTTP 403.
+- **0.1.1** — LGPL-3.0 like upstream.
+- **0.1.0** — extracted from prifly's read-aloud.
 
 ## License
 
